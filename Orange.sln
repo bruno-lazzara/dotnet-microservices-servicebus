@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34525.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FrontEnd", "FrontEnd", "{8A9A0E08-62D0-49FD-B67E-4A61ABAD8B3E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gateway", "Gateway", "{6603A6D6-0925-43E4-ABF5-C8D108146C26}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration", "Integration", "{2A9558E1-4609-4CCF-B77D-30DD5380DB90}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{83623753-EC5A-4455-B9A1-3E69D0EE22AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orange.Services.CouponAPI", "Orange.Services.CouponAPI\Orange.Services.CouponAPI.csproj", "{03A20E3C-B8D6-4AB6-9645-E0D319D0D8DB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{03A20E3C-B8D6-4AB6-9645-E0D319D0D8DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03A20E3C-B8D6-4AB6-9645-E0D319D0D8DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03A20E3C-B8D6-4AB6-9645-E0D319D0D8DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03A20E3C-B8D6-4AB6-9645-E0D319D0D8DB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{03A20E3C-B8D6-4AB6-9645-E0D319D0D8DB} = {83623753-EC5A-4455-B9A1-3E69D0EE22AB}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3016451D-B150-4133-8C8C-3A7477AA34FA}
+	EndGlobalSection
+EndGlobal
