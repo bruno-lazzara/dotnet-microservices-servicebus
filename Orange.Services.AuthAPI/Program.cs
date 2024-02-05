@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Orange.Services.AuthAPI.Data;
 using Orange.Services.AuthAPI.Models;
+using Orange.Services.AuthAPI.Services;
+using Orange.Services.AuthAPI.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +24,8 @@ builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("ApiSett
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<OrangeDbContext>()
     .AddDefaultTokenProviders();
+
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 
