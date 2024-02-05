@@ -64,7 +64,7 @@ namespace Orange.Services.CouponAPI.Controllers
             }
         }
 
-        [HttpGet("{code}")]
+        [HttpGet("code/{code}")]
         public ActionResult Get(string code)
         {
             try
