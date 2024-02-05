@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Orange.Services.CouponAPI.Data;
 using Orange.Services.CouponAPI.Models.DTO;
 using Orange.Services.CouponAPI.Models.Entity;
@@ -10,9 +11,11 @@ namespace Orange.Services.CouponAPI.Controllers
     public class CouponController : ControllerBase
     {
         private readonly OrangeDbContext _context;
-        public CouponController(OrangeDbContext context)
+        private readonly IMapper _mapper;
+        public CouponController(OrangeDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -20,9 +23,11 @@ namespace Orange.Services.CouponAPI.Controllers
         {
             try
             {
-                var response = new ResponseDTO<List<Coupon>>();
+                var response = new ResponseDTO<List<CouponDTO>>();
 
-                response.Result = _context.Coupons.ToList();
+                var list = _context.Coupons.ToList();
+                response.Result = _mapper.Map<List<CouponDTO>>(list);
+
                 if (response.Result.Count == 0)
                 {
                     response.Message = "No coupons found.";
@@ -41,9 +46,11 @@ namespace Orange.Services.CouponAPI.Controllers
         {
             try
             {
-                var response = new ResponseDTO<Coupon>();
+                var response = new ResponseDTO<CouponDTO>();
 
-                response.Result = _context.Coupons.FirstOrDefault(c => c.CouponId == id);
+                var coupon = _context.Coupons.FirstOrDefault(c => c.CouponId == id);
+                response.Result = _mapper.Map<CouponDTO>(coupon);
+
                 if (response.Result == null)
                 {
                     response.Message = "Coupon not found.";
