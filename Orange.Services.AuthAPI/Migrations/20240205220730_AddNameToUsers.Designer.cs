@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Orange.Services.AuthAPI.Data;
 
@@ -11,9 +12,11 @@ using Orange.Services.AuthAPI.Data;
 namespace Orange.Services.AuthAPI.Migrations
 {
     [DbContext(typeof(OrangeDbContext))]
-    partial class OrangeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240205220730_AddNameToUsers")]
+    partial class AddNameToUsers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
