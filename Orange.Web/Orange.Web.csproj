@@ -6,4 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Orange.Models\Orange.Models.csproj" />
+  </ItemGroup>
+
 </Project>
