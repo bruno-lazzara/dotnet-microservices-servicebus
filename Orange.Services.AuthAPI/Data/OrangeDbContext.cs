@@ -10,7 +10,7 @@ namespace Orange.Services.AuthAPI.Data
         {
         }
 
-        public DbSet<ApplicationUser> ApplicationUsers {  get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
