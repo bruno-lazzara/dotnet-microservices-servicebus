@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Orange.Services.CouponAPI.Data;
+using Orange.Services.CouponAPI.Models.DTO;
+using Orange.Services.CouponAPI.Models.Entity;
 
 namespace Orange.Services.CouponAPI.Controllers
 {
@@ -18,8 +20,15 @@ namespace Orange.Services.CouponAPI.Controllers
         {
             try
             {
-                var list = _context.Coupons.ToList();
-                return Ok(list);
+                var response = new ResponseDTO<List<Coupon>>();
+
+                response.Result = _context.Coupons.ToList();
+                if (response.Result.Count == 0)
+                {
+                    response.Message = "No coupons found.";
+                }
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -32,12 +41,15 @@ namespace Orange.Services.CouponAPI.Controllers
         {
             try
             {
-                var coupon = _context.Coupons.FirstOrDefault(c => c.CouponId == id);
-                if (coupon == null)
+                var response = new ResponseDTO<Coupon>();
+
+                response.Result = _context.Coupons.FirstOrDefault(c => c.CouponId == id);
+                if (response.Result == null)
                 {
-                    return NotFound();
+                    response.Message = "Coupon not found.";
                 }
-                return Ok(coupon);
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
