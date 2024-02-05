@@ -26,9 +26,14 @@ namespace Orange.Services.AuthAPI.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login()
+        public async Task<IActionResult> Login([FromBody] LoginUserDTO loginUserDTO)
         {
-            return Ok();
+            LoginUserResponseDTO response = await _authService.LoginAsync(loginUserDTO);
+            if (response.User == null)
+            {
+                return BadRequest();
+            }
+            return Ok(response);
         }
     }
 }

@@ -8,19 +8,46 @@ namespace Orange.Services.AuthAPI.Services
 {
     public class AuthService : IAuthService
     {
-        private readonly OrangeDbContext _dbContext;
+        private readonly OrangeDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         public AuthService(OrangeDbContext dbContext, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            _dbContext = dbContext;
+            _context = dbContext;
             _userManager = userManager;
             _roleManager = roleManager;
         }
 
-        public Task<LoginUserResponseDTO> LoginAsync(LoginUserDTO request)
+        public async Task<LoginUserResponseDTO> LoginAsync(LoginUserDTO request)
         {
-            throw new NotImplementedException();
+            var responseDTO = new LoginUserResponseDTO();
+            try
+            {
+                var user = _context.ApplicationUsers.FirstOrDefault(u => u.UserName.ToLower() == request.UserName.ToLower());
+                bool isValid = await _userManager.CheckPasswordAsync(user, request.Password);
+
+                if (user == null || !isValid)
+                {
+                    return responseDTO;
+                }
+
+                UserDTO userDTO = new()
+                {
+                    Email = user.Email,
+                    Id = user.Id,
+                    Name = user.Name,
+                    PhoneNumber = user.PhoneNumber
+                };
+
+                responseDTO.User = userDTO;
+                //responseDTO.Token = generate token
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return responseDTO;
         }
 
         public async Task<UserDTO?> RegisterAsync(RegisterUserDTO request)
@@ -42,7 +69,7 @@ namespace Orange.Services.AuthAPI.Services
                     return null;
                 }
 
-                var userResponse = _dbContext.ApplicationUsers.First(u => u.UserName == request.Email);
+                var userResponse = _context.ApplicationUsers.First(u => u.UserName == request.Email);
 
                 UserDTO userDTO = new()
                 {
