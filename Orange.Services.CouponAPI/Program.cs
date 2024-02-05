@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Orange.Services.CouponAPI.Data;
+using Orange.Services.CouponAPI.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,8 @@ builder.Services.AddDbContext<OrangeDbContext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddAutoMapper(typeof(MappingConfig));
 
 var app = builder.Build();
 
