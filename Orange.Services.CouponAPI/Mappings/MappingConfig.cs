@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Orange.Services.CouponAPI.Models.DTO;
+using Orange.Models.DTO;
 using Orange.Services.CouponAPI.Models.Entity;
 
 namespace Orange.Services.CouponAPI.Mappings

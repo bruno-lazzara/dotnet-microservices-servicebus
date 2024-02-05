@@ -1,4 +1,4 @@
-﻿namespace Orange.Services.CouponAPI.Models.DTO
+﻿namespace Orange.Models.DTO
 {
     public class ResponseDTO<TResult>
     {

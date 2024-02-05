@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Orange.Models.DTO;
 using Orange.Services.CouponAPI.Data;
-using Orange.Services.CouponAPI.Models.DTO;
 using Orange.Services.CouponAPI.Models.Entity;
 
 namespace Orange.Services.CouponAPI.Controllers
