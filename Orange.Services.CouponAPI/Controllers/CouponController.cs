@@ -23,17 +23,15 @@ namespace Orange.Services.CouponAPI.Controllers
         {
             try
             {
-                var response = new ResponseDTO<List<CouponDTO>>();
-
-                var list = _context.Coupons.ToList();
-                response.Result = _mapper.Map<List<CouponDTO>>(list);
-
-                if (response.Result.Count == 0)
+                List<Coupon> list = _context.Coupons.ToList();
+                if (list.Count == 0)
                 {
-                    response.Message = "No coupons found.";
+                    return NotFound("No coupons found.");
                 }
 
-                return Ok(response);
+                List<CouponDTO> listDTO = _mapper.Map<List<CouponDTO>>(list);
+
+                return Ok(listDTO);
             }
             catch (Exception ex)
             {
@@ -46,17 +44,15 @@ namespace Orange.Services.CouponAPI.Controllers
         {
             try
             {
-                var response = new ResponseDTO<CouponDTO>();
-
                 var coupon = _context.Coupons.FirstOrDefault(c => c.CouponId == id);
-                response.Result = _mapper.Map<CouponDTO>(coupon);
-
-                if (response.Result == null)
+                if (coupon == null)
                 {
-                    response.Message = "Coupon not found.";
+                    return NotFound("Coupon not found.");
                 }
 
-                return Ok(response);
+                var couponDTO = _mapper.Map<CouponDTO>(coupon);
+
+                return Ok(couponDTO);
             }
             catch (Exception ex)
             {
@@ -69,17 +65,15 @@ namespace Orange.Services.CouponAPI.Controllers
         {
             try
             {
-                var response = new ResponseDTO<CouponDTO>();
-
                 var coupon = _context.Coupons.FirstOrDefault(c => c.CouponCode.ToLower() == code.ToLower());
-                response.Result = _mapper.Map<CouponDTO>(coupon);
-
-                if (response.Result == null)
+                if (coupon == null)
                 {
-                    response.Message = "Coupon not found.";
+                    return NotFound("Coupon not found.");
                 }
 
-                return Ok(response);
+                var couponDTO = _mapper.Map<CouponDTO>(coupon);
+
+                return Ok(couponDTO);
             }
             catch (Exception ex)
             {
@@ -92,15 +86,13 @@ namespace Orange.Services.CouponAPI.Controllers
         {
             try
             {
-                var response = new ResponseDTO<CouponDTO>();
-
                 Coupon coupon = _mapper.Map<Coupon>(couponDTO);
                 _context.Coupons.Add(coupon);
                 _context.SaveChanges();
 
-                response.Result = _mapper.Map<CouponDTO>(coupon);
+                var couponDTOResponse = _mapper.Map<CouponDTO>(coupon);
 
-                return StatusCode(201, response);
+                return StatusCode(201, couponDTOResponse);
             }
             catch (Exception ex)
             {
@@ -113,15 +105,13 @@ namespace Orange.Services.CouponAPI.Controllers
         {
             try
             {
-                var response = new ResponseDTO<CouponDTO>();
-
                 Coupon coupon = _mapper.Map<Coupon>(couponDTO);
                 _context.Coupons.Update(coupon);
                 _context.SaveChanges();
 
-                response.Result = _mapper.Map<CouponDTO>(coupon);
+                var couponDTOResponse = _mapper.Map<CouponDTO>(coupon);
 
-                return Ok(response);
+                return Ok(couponDTOResponse);
             }
             catch (Exception ex)
             {
@@ -134,22 +124,16 @@ namespace Orange.Services.CouponAPI.Controllers
         {
             try
             {
-                var response = new ResponseDTO<bool>();
-
                 Coupon? coupon = _context.Coupons.FirstOrDefault(c => c.CouponId == id);
                 if (coupon == null)
                 {
-                    response.Message = "Coupon not found.";
-                    response.Result = false;
-                    return Ok(response);
+                    return NotFound("Coupon not found.");
                 }
 
                 _context.Coupons.Remove(coupon);
                 _context.SaveChanges();
 
-                response.Message = "Coupon deleted.";
-                response.Result = true;
-                return Ok(response);
+                return NoContent();
             }
             catch (Exception ex)
             {
