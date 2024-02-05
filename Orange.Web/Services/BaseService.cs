@@ -13,7 +13,7 @@ namespace Orange.Web.Services
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<HttpResponseMessage?> SendAsync<TRequest>(RequestDTO<TRequest> request)
+        public async Task<HttpResponseMessage?> SendAsync(RequestDTO request)
         {
             HttpResponseMessage? response = null;
             try
