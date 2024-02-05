@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Orange.Services.AuthAPI.Models;
 using Orange.Services.AuthAPI.Services.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
@@ -10,9 +11,9 @@ namespace Orange.Services.AuthAPI.Services
     public class TokenService : ITokenService
     {
         private readonly JwtOptions _jwtOptions;
-        public TokenService(JwtOptions jwtOptions)
+        public TokenService(IOptions<JwtOptions> jwtOptions)
         {
-            _jwtOptions = jwtOptions;
+            _jwtOptions = jwtOptions.Value;
         }
 
         public string GenerateToken(ApplicationUser user)

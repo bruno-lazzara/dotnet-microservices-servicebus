@@ -11,11 +11,13 @@ namespace Orange.Services.AuthAPI.Services
         private readonly OrangeDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        public AuthService(OrangeDbContext dbContext, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        private readonly ITokenService _tokenService;
+        public AuthService(OrangeDbContext dbContext, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, ITokenService tokenService)
         {
             _context = dbContext;
             _userManager = userManager;
             _roleManager = roleManager;
+            _tokenService = tokenService;
         }
 
         public async Task<LoginUserResponseDTO> LoginAsync(LoginUserDTO request)
@@ -31,6 +33,12 @@ namespace Orange.Services.AuthAPI.Services
                     return responseDTO;
                 }
 
+                var token = _tokenService.GenerateToken(user);
+                if (string.IsNullOrWhiteSpace(token))
+                {
+                    return responseDTO;
+                }
+
                 UserDTO userDTO = new()
                 {
                     Email = user.Email,
@@ -40,7 +48,7 @@ namespace Orange.Services.AuthAPI.Services
                 };
 
                 responseDTO.User = userDTO;
-                //responseDTO.Token = generate token
+                responseDTO.Token = token;
             }
             catch (Exception ex)
             {
