@@ -39,5 +39,11 @@ namespace Orange.Web.Controllers
 
             return RedirectToAction("Index");
         }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            var deleted = await _couponService.DeleteCouponAsync(id);
+            return RedirectToAction("Index");
+        }
     }
 }
