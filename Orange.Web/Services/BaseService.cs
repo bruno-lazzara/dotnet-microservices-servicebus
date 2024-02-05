@@ -13,44 +13,31 @@ namespace Orange.Web.Services
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<ResponseDTO<TResponse>?> SendAsync<TRequest, TResponse>(RequestDTO<TRequest> request)
+        public async Task<HttpResponseMessage?> SendAsync<TRequest>(RequestDTO<TRequest> request)
         {
-            ResponseDTO<TResponse>? responseDTO = new();
+            HttpResponseMessage? response = null;
             try
             {
                 HttpClient client = _httpClientFactory.CreateClient("OrangeAPI");
-                HttpRequestMessage message = new();
+                HttpRequestMessage message = new()
+                {
+                    RequestUri = new Uri(request.Url)
+                };
                 message.Headers.Add("Accept", "application/json");
-                message.RequestUri = new Uri(request.Url);
                 if (request.Data != null)
                 {
                     message.Content = new StringContent(JsonConvert.SerializeObject(request.Data), Encoding.UTF8, "application/json");
                 }
                 message.Method = request.HttpMethod;
 
-                HttpResponseMessage? response = null;
-
                 response = await client.SendAsync(message);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    responseDTO.Message = $"Error - returned status code {response.StatusCode}.";
-                }
-                else
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-                    responseDTO = JsonConvert.DeserializeObject<ResponseDTO<TResponse>>(content);
-                }
             }
             catch (Exception ex)
             {
-                responseDTO = new()
-                {
-                    Message = $"Error"
-                };
+
             }
 
-            return responseDTO;
+            return response;
         }
     }
 }
