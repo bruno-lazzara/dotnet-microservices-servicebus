@@ -34,15 +34,27 @@ namespace Orange.Web.Controllers
             var couponResponse = await _couponService.CreateCouponAsync(coupon);
             if (couponResponse == null)
             {
+                TempData["error"] = "Error on creating coupon";
                 return View(coupon);
             }
 
+            TempData["success"] = "Coupon created successfully";
             return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> Delete(int id)
         {
             var deleted = await _couponService.DeleteCouponAsync(id);
+
+            if (deleted)
+            {
+                TempData["success"] = "Coupon deleted successfully";
+            }
+            else
+            {
+                TempData["error"] = "Error on deleting coupon";
+            }
+
             return RedirectToAction("Index");
         }
     }
