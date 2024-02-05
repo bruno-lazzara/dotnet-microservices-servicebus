@@ -22,5 +22,22 @@ namespace Orange.Web.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(CouponDTO coupon)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(coupon);
+            }
+
+            var couponResponse = await _couponService.CreateCouponAsync(coupon);
+            if (couponResponse == null)
+            {
+                return View(coupon);
+            }
+
+            return RedirectToAction("Index");
+        }
     }
 }
