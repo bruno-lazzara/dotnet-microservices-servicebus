@@ -17,5 +17,10 @@ namespace Orange.Web.Controllers
             List<CouponDTO> coupons = await _couponService.GetAllAsync();
             return View(coupons);
         }
+
+        public async Task<IActionResult> Create()
+        {
+            return View();
+        }
     }
 }
