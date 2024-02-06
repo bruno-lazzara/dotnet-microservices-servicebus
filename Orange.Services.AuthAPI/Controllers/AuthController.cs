@@ -35,5 +35,16 @@ namespace Orange.Services.AuthAPI.Controllers
             }
             return Ok(response);
         }
+
+        [HttpPost("assignrole")]
+        public async Task<IActionResult> AssignRole([FromBody] RegisterUserDTO userDTO)
+        {
+            bool roleAssigned = await _authService.AssignRoleAsync(userDTO.Email, userDTO.Role);
+            if (!roleAssigned)
+            {
+                return BadRequest();
+            }
+            return NoContent();
+        }
     }
 }

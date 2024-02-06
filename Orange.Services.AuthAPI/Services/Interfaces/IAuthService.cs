@@ -6,5 +6,6 @@ namespace Orange.Services.AuthAPI.Services.Interfaces
     {
         Task<UserDTO?> RegisterAsync(RegisterUserDTO request);
         Task<LoginUserResponseDTO> LoginAsync(LoginUserDTO request);
+        Task<bool> AssignRoleAsync(string email, string roleName);
     }
 }

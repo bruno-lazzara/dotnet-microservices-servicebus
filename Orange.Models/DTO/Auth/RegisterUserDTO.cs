@@ -3,5 +3,6 @@
     public class RegisterUserDTO : BaseUserDTO
     {
         public string Password { get; set; }
+        public string Role { get; set; }
     }
 }

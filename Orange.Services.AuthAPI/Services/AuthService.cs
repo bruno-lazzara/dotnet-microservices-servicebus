@@ -20,6 +20,30 @@ namespace Orange.Services.AuthAPI.Services
             _tokenService = tokenService;
         }
 
+        public async Task<bool> AssignRoleAsync(string email, string roleName)
+        {
+            try
+            {
+                var user = _context.ApplicationUsers.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
+                if (user == null)
+                {
+                    return false;
+                }
+
+                if (!await _roleManager.RoleExistsAsync(roleName))
+                {
+                    await _roleManager.CreateAsync(new IdentityRole(roleName));
+                }
+
+                await _userManager.AddToRoleAsync(user, roleName);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
         public async Task<LoginUserResponseDTO> LoginAsync(LoginUserDTO request)
         {
             var responseDTO = new LoginUserResponseDTO();
