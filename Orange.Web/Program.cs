@@ -9,11 +9,13 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
+builder.Services.AddHttpClient<IAuthService, AuthService>();
 builder.Services.AddHttpClient<ICouponService, CouponService>();
 
 Routes.Configure(builder.Configuration);
 
 builder.Services.AddScoped<IBaseService, BaseService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICouponService, CouponService>();
 
 var app = builder.Build();
