@@ -107,6 +107,11 @@ namespace Orange.Web.Controllers
             identity.AddClaim(new Claim(JwtRegisteredClaimNames.Name, userDto.Name));
             identity.AddClaim(new Claim(ClaimTypes.Name, userDto.Email));
 
+            foreach (var role in userDto.Roles)
+            {
+                identity.AddClaim(new Claim(ClaimTypes.Role, role));
+            }
+
             ClaimsPrincipal principal = new(identity);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
         }
