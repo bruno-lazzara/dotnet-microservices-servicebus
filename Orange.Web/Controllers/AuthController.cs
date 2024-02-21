@@ -1,23 +1,45 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Orange.Models.DTO.Auth;
 using Orange.Web.Services.Interfaces;
 using Orange.Web.Utils;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace Orange.Web.Controllers
 {
     public class AuthController : Controller
     {
         private readonly IAuthService _authService;
-        public AuthController(IAuthService authService)
+        private readonly ITokenProvider _tokenProvider;
+        public AuthController(IAuthService authService, ITokenProvider tokenProvider)
         {
             _authService = authService;
+            _tokenProvider = tokenProvider;
         }
 
         [HttpGet]
         public async Task<IActionResult> Login()
         {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginUserDTO user)
+        {
+            LoginUserResponseDTO? userLogin = await _authService.LoginAsync(user);
+            if (userLogin == null || userLogin.User == null)
+            {
+                ModelState.AddModelError("CustomError", "Username or password is incorrect");
+                return View(user);
+            }
+
+            await SignInUserAsync(userLogin.User);
+            _tokenProvider.SetToken(userLogin.Token);
+
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
@@ -72,6 +94,19 @@ namespace Orange.Web.Controllers
             };
 
             ViewBag.RoleList = roleList;
+        }
+
+        private async Task SignInUserAsync(UserDTO userDto)
+        {
+            var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Email, userDto.Email));
+            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Sub, userDto.Id));
+            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Name, userDto.Name));
+            identity.AddClaim(new Claim(ClaimTypes.Name, userDto.Email));
+
+            var principal = new ClaimsPrincipal(identity);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
         }
     }
 }
