@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Orange.Models.DTO.Auth;
 using Orange.Web.Services.Interfaces;
 
@@ -21,6 +22,14 @@ namespace Orange.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Register()
         {
+            var roleList = new List<SelectListItem>()
+            {
+                new() { Text = "ADMIN", Value = "ADMIN" },
+                new() { Text = "CUSTOMER", Value = "CUSTOMER" }
+            };
+
+            ViewBag.RoleList = roleList;
+
             return View();
         }
 
