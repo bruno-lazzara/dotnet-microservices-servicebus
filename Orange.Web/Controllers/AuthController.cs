@@ -82,7 +82,9 @@ namespace Orange.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Logout()
         {
-            return View();
+            await HttpContext.SignOutAsync();
+            _tokenProvider.ClearToken();
+            return RedirectToAction("Index", "Home");
         }
 
         private void PopulateViewBags()
@@ -98,14 +100,14 @@ namespace Orange.Web.Controllers
 
         private async Task SignInUserAsync(UserDTO userDto)
         {
-            var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+            ClaimsIdentity identity = new(CookieAuthenticationDefaults.AuthenticationScheme);
 
             identity.AddClaim(new Claim(JwtRegisteredClaimNames.Email, userDto.Email));
             identity.AddClaim(new Claim(JwtRegisteredClaimNames.Sub, userDto.Id));
             identity.AddClaim(new Claim(JwtRegisteredClaimNames.Name, userDto.Name));
             identity.AddClaim(new Claim(ClaimTypes.Name, userDto.Email));
 
-            var principal = new ClaimsPrincipal(identity);
+            ClaimsPrincipal principal = new(identity);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
         }
     }
