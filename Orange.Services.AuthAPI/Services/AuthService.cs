@@ -57,7 +57,9 @@ namespace Orange.Services.AuthAPI.Services
                     return responseDTO;
                 }
 
-                var token = _tokenService.GenerateToken(user);
+                var roles = await _userManager.GetRolesAsync(user);
+
+                var token = _tokenService.GenerateToken(user, roles);
                 if (string.IsNullOrWhiteSpace(token))
                 {
                     return responseDTO;
@@ -68,7 +70,8 @@ namespace Orange.Services.AuthAPI.Services
                     Email = user.Email,
                     Id = user.Id,
                     Name = user.Name,
-                    PhoneNumber = user.PhoneNumber
+                    PhoneNumber = user.PhoneNumber,
+                    Roles = roles.ToList()
                 };
 
                 responseDTO.User = userDTO;

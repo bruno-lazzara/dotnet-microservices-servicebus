@@ -16,7 +16,7 @@ namespace Orange.Services.AuthAPI.Services
             _jwtOptions = jwtOptions.Value;
         }
 
-        public string GenerateToken(ApplicationUser user)
+        public string GenerateToken(ApplicationUser user, IEnumerable<string> roles)
         {
             try
             {
@@ -30,6 +30,8 @@ namespace Orange.Services.AuthAPI.Services
                     new(JwtRegisteredClaimNames.Sub, user.Id),
                     new(JwtRegisteredClaimNames.Name, user.UserName)
                 };
+
+                claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
 
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
