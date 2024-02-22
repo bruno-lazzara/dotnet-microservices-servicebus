@@ -48,7 +48,7 @@ namespace Orange.Web.Services
                     HttpMethod = HttpMethod.Post,
                     Url = Routes.AuthAPI + $"/api/auth/login",
                     Data = user
-                });
+                }, false);
 
                 if (response != null && response.IsSuccessStatusCode)
                 {
@@ -73,7 +73,7 @@ namespace Orange.Web.Services
                     HttpMethod = HttpMethod.Post,
                     Url = Routes.AuthAPI + $"/api/auth/register",
                     Data = user
-                });
+                }, false);
 
                 if (response != null && response.IsSuccessStatusCode)
                 {

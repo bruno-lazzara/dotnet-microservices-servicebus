@@ -4,6 +4,6 @@ namespace Orange.Web.Services.Interfaces
 {
     public interface IBaseService
     {
-        Task<HttpResponseMessage?> SendAsync(RequestDTO request);
+        Task<HttpResponseMessage?> SendAsync(RequestDTO request, bool withBearer = true);
     }
 }

@@ -8,12 +8,14 @@ namespace Orange.Web.Services
     public class BaseService : IBaseService
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        public BaseService(IHttpClientFactory httpClientFactory)
+        private readonly ITokenProvider _tokenProvider;
+        public BaseService(IHttpClientFactory httpClientFactory, ITokenProvider tokenProvider)
         {
             _httpClientFactory = httpClientFactory;
+            _tokenProvider = tokenProvider;
         }
 
-        public async Task<HttpResponseMessage?> SendAsync(RequestDTO request)
+        public async Task<HttpResponseMessage?> SendAsync(RequestDTO request, bool withBearer = true)
         {
             HttpResponseMessage? response = null;
             try
@@ -24,6 +26,13 @@ namespace Orange.Web.Services
                     RequestUri = new Uri(request.Url)
                 };
                 message.Headers.Add("Accept", "application/json");
+
+                if (withBearer)
+                {
+                    var token = _tokenProvider.GetToken();
+                    message.Headers.Add("Authorization", $"Bearer {token}");
+                }
+
                 if (request.Data != null)
                 {
                     message.Content = new StringContent(JsonConvert.SerializeObject(request.Data), Encoding.UTF8, "application/json");
