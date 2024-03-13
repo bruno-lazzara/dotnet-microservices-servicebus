@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Orange.Models.DTO;
 using Orange.Services.CouponAPI.Data;
 using Orange.Services.CouponAPI.Models.Entity;
+using Orange.Services.CouponAPI.Utils;
 
 namespace Orange.Services.CouponAPI.Controllers
 {
@@ -84,6 +85,7 @@ namespace Orange.Services.CouponAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = Constants.ROLE_ADMIN)]
         public ActionResult Post([FromBody] CouponDTO couponDTO)
         {
             try
@@ -103,6 +105,7 @@ namespace Orange.Services.CouponAPI.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = Constants.ROLE_ADMIN)]
         public ActionResult Put([FromBody] CouponDTO couponDTO)
         {
             try
@@ -122,6 +125,7 @@ namespace Orange.Services.CouponAPI.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = Constants.ROLE_ADMIN)]
         public ActionResult Delete(int id)
         {
             try
