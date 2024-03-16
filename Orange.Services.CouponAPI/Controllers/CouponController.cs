@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Orange.Models.DTO;
 using Orange.Services.CouponAPI.Data;
 using Orange.Services.CouponAPI.Models.Entity;
-using Orange.Services.CouponAPI.Utils;
+using Utils;
 
 namespace Orange.Services.CouponAPI.Controllers
 {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Orange.Services.ProductAPI.Models.Entity;
 
-namespace Orange.Services.CouponAPI.Data
+namespace Orange.Services.ProductAPI.Data
 {
     public class OrangeDbContext : DbContext
     {

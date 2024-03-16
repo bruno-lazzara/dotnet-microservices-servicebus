@@ -1,4 +1,4 @@
-﻿namespace Orange.Services.CouponAPI.Utils
+﻿namespace Utils
 {
     public static class Constants
     {
