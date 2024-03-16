@@ -17,7 +17,7 @@
             <div class="col-6">
             </div>
             <div class="col-6 text-end">
-                <a class="btn btn-outline-light"><i class="bi bi-plus-square"></i> Create New Product</a>
+                <a asp-action="Create" class="btn btn-outline-light"><i class="bi bi-plus-square"></i> Create New Product</a>
             </div>
         </div>
         <table class="table table-dark">
@@ -52,7 +52,7 @@
                             <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.ProductId">
                                 <i class="bi bi-pencil-square"></i>
                             </a>
-                            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.ProductId">
+                            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.ProductId" onclick="return confirm('Delete the product @(item.Name)?')">
                                 <i class="bi bi-trash"></i>
                             </a>
                         </td>
