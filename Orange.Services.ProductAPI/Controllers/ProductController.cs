@@ -10,7 +10,6 @@ namespace Orange.Services.ProductAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly OrangeDbContext _context;
