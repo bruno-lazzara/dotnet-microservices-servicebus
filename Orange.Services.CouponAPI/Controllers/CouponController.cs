@@ -10,7 +10,7 @@ namespace Orange.Services.CouponAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class CouponController : ControllerBase
     {
         private readonly OrangeDbContext _context;
