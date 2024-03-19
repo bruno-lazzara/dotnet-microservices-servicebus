@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Orange.Models.DTO;
 using Orange.Services.ShoppingCartAPI.Data;
 using Orange.Services.ShoppingCartAPI.Models.Entity;
-using System.Reflection.PortableExecutable;
 
 namespace Orange.Services.ShoppingCartAPI.Controllers
 {
@@ -18,6 +17,35 @@ namespace Orange.Services.ShoppingCartAPI.Controllers
         {
             _mapper = mapper;
             _context = context;
+        }
+
+        [HttpGet("GetCart/{userId}")]
+        public async Task<IActionResult> GetCart(string userId)
+        {
+            try
+            {
+                CartDTO cart = new();
+
+                CartHeader? cartHeader = _context.CartHeaders.FirstOrDefault(ch => ch.UserId == userId);
+                if (cartHeader == null)
+                {
+                    return NotFound("No cart found for this user");
+                }
+
+                List<CartDetails> cartDetails = _context.CartDetails.Where(cd => cd.CartHeaderId == cartHeader.CartHeaderId).ToList();
+
+                //Call ProductAPI to populate the products of the cart, then calculate cart total
+                //cartHeader.CartTotal = cartDetails.Select(cd => (cd.Count * cd.Product.Price)).Sum();
+
+                cart.CartHeader = _mapper.Map<CartHeaderDTO>(cartHeader);
+                cart.CartDetails = _mapper.Map<List<CartDetailsDTO>>(cartDetails);
+
+                return Ok(cart);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPost("CartUpsert")]
