@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Orange.Models.DTO;
 using Orange.Services.ShoppingCartAPI.Data;
 using Orange.Services.ShoppingCartAPI.Models.Entity;
+using Orange.Services.ShoppingCartAPI.Services.Interfaces;
 
 namespace Orange.Services.ShoppingCartAPI.Controllers
 {
@@ -13,10 +14,12 @@ namespace Orange.Services.ShoppingCartAPI.Controllers
     {
         private readonly IMapper _mapper;
         private readonly OrangeDbContext _context;
-        public CartController(IMapper mapper, OrangeDbContext context)
+        private readonly IProductService _productService;
+        public CartController(IMapper mapper, OrangeDbContext context, IProductService productService)
         {
             _mapper = mapper;
             _context = context;
+            _productService = productService;
         }
 
         [HttpGet("GetCart/{userId}")]
@@ -34,8 +37,17 @@ namespace Orange.Services.ShoppingCartAPI.Controllers
 
                 List<CartDetails> cartDetails = _context.CartDetails.Where(cd => cd.CartHeaderId == cartHeader.CartHeaderId).ToList();
 
-                //Call ProductAPI to populate the products of the cart, then calculate cart total
-                //cartHeader.CartTotal = cartDetails.Select(cd => (cd.Count * cd.Product.Price)).Sum();
+                var products = await _productService.GetProducts();
+
+                foreach (var item in cartDetails)
+                {
+                    item.Product = products.FirstOrDefault(p => p.ProductId == item.ProductId);
+
+                    if (item.Product != null)
+                    {
+                        cartHeader.CartTotal += item.Count * item.Product.Price;
+                    }
+                }
 
                 cart.CartHeader = _mapper.Map<CartHeaderDTO>(cartHeader);
                 cart.CartDetails = _mapper.Map<List<CartDetailsDTO>>(cartDetails);
