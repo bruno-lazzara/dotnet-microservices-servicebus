@@ -5,5 +5,6 @@ namespace Orange.Services.EmailAPI.Services
     public interface IEmailService
     {
         Task EmailCartAndLog(CartDTO cartDTO);
+        Task RegisterUserEmailAndLog(string email);
     }
 }
