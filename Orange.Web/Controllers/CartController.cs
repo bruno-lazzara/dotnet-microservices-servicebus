@@ -22,6 +22,13 @@ namespace Orange.Web.Controllers
         }
 
         [Authorize]
+        public async Task<IActionResult> Checkout()
+        {
+            var userCart = await LoadUserCartAsync();
+            return View(userCart);
+        }
+
+        [Authorize]
         public async Task<IActionResult> Remove(int cartDetailsId)
         {
             bool itemRemoved = await _cartService.RemoveFromCartAsync(cartDetailsId);
