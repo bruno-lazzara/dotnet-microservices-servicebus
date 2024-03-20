@@ -31,6 +31,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orange.Services.ShoppingCar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orange.MessageBus", "Orange.MessageBus\Orange.MessageBus.csproj", "{1DE29F1F-6A4C-45BD-974F-A1C14234DCDA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orange.Services.EmailAPI", "Orange.Services.EmailAPI\Orange.Services.EmailAPI.csproj", "{86E6D850-15EC-4F2A-AD7F-CCA3939DF94C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,10 @@ Global
 		{1DE29F1F-6A4C-45BD-974F-A1C14234DCDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1DE29F1F-6A4C-45BD-974F-A1C14234DCDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1DE29F1F-6A4C-45BD-974F-A1C14234DCDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86E6D850-15EC-4F2A-AD7F-CCA3939DF94C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86E6D850-15EC-4F2A-AD7F-CCA3939DF94C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86E6D850-15EC-4F2A-AD7F-CCA3939DF94C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86E6D850-15EC-4F2A-AD7F-CCA3939DF94C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -82,6 +88,7 @@ Global
 		{4B92287A-97FB-41EB-B925-3E428A57D9E4} = {68A67191-0D6F-41E7-BD03-E1D89A6EBAB7}
 		{A9298A82-4051-4D7F-ADEC-78FD22956A62} = {83623753-EC5A-4455-B9A1-3E69D0EE22AB}
 		{1DE29F1F-6A4C-45BD-974F-A1C14234DCDA} = {2A9558E1-4609-4CCF-B77D-30DD5380DB90}
+		{86E6D850-15EC-4F2A-AD7F-CCA3939DF94C} = {83623753-EC5A-4455-B9A1-3E69D0EE22AB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3016451D-B150-4133-8C8C-3A7477AA34FA}
