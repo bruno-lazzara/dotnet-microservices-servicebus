@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Orange.MessageBus;
 using Orange.Models.DTO;
+using Orange.Services.EmailAPI.Services;
 using System.Text;
 
 namespace Orange.Services.EmailAPI.Messaging
@@ -11,9 +12,11 @@ namespace Orange.Services.EmailAPI.Messaging
         private readonly string serviceBusConnectionString;
         private readonly string emailCartQueue;
         private readonly IConfiguration _configuration;
+        private readonly EmailService _emailService;
         private readonly ServiceBusProcessor _emailCartProcessor;
-        public ServiceBusConsumer(IConfiguration configuration)
+        public ServiceBusConsumer(IConfiguration configuration, EmailService emailService)
         {
+            _emailService = emailService;
             _configuration = configuration;
 
             serviceBusConnectionString = Constants.ConnectionString;
@@ -45,7 +48,7 @@ namespace Orange.Services.EmailAPI.Messaging
 
                 CartDTO objMessage = JsonConvert.DeserializeObject<CartDTO>(body);
 
-                //TODO - log email
+                await _emailService.EmailCartAndLog(objMessage);
 
                 await args.CompleteMessageAsync(args.Message);
             }

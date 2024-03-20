@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Orange.Services.EmailAPI.Messaging;
-using System.Runtime.CompilerServices;
+﻿using Orange.Services.EmailAPI.Messaging;
 
 namespace Orange.Services.EmailAPI.Extensions
 {
