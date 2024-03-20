@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Orange.Services.EmailAPI.Data;
+using Orange.Services.EmailAPI.Extensions;
+using Orange.Services.EmailAPI.Messaging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,8 @@ builder.Services.AddDbContext<OrangeDbContext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddSingleton<IServiceBusConsumer, ServiceBusConsumer>();
 
 var app = builder.Build();
 
@@ -31,6 +35,8 @@ app.UseAuthorization();
 app.MapControllers();
 
 ApplyMigrations();
+
+app.UseAzureServiceBusConsumer();
 
 app.Run();
 

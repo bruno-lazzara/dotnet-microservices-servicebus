@@ -24,4 +24,9 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Orange.MessageBus\Orange.MessageBus.csproj" />
+    <ProjectReference Include="..\Orange.Models\Orange.Models.csproj" />
+  </ItemGroup>
+
 </Project>
