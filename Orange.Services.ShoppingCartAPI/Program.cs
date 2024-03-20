@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Orange.MessageBus;
 using Orange.Services.ShoppingCartAPI.Data;
 using Orange.Services.ShoppingCartAPI.Extensions;
 using Orange.Services.ShoppingCartAPI.Mappings;
@@ -31,6 +32,7 @@ builder.Services.AddHttpClient("Coupon", c => c.BaseAddress = new Uri(builder.Co
 
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICouponService, CouponService>();
+builder.Services.AddScoped<IMessageBus, MessageBus>();
 
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 

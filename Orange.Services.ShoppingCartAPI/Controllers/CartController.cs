@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Orange.MessageBus;
 using Orange.Models.DTO;
 using Orange.Services.ShoppingCartAPI.Data;
 using Orange.Services.ShoppingCartAPI.Models.Entity;
@@ -16,12 +17,16 @@ namespace Orange.Services.ShoppingCartAPI.Controllers
         private readonly OrangeDbContext _context;
         private readonly IProductService _productService;
         private readonly ICouponService _couponService;
-        public CartController(IMapper mapper, OrangeDbContext context, IProductService productService, ICouponService couponService)
+        private readonly IMessageBus _messageBus;
+        private readonly IConfiguration _configuration;
+        public CartController(IMapper mapper, OrangeDbContext context, IProductService productService, ICouponService couponService, IMessageBus messageBus, IConfiguration configuration)
         {
             _mapper = mapper;
             _context = context;
             _productService = productService;
             _couponService = couponService;
+            _messageBus = messageBus;
+            _configuration = configuration;
         }
 
         [HttpGet("GetCart/{userId}")]
@@ -168,6 +173,21 @@ namespace Orange.Services.ShoppingCartAPI.Controllers
                 }
 
                 await _context.SaveChangesAsync();
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost("EmailCartRequest")]
+        public async Task<IActionResult> EmailCartRequest([FromBody] CartDTO cart)
+        {
+            try
+            {
+                await _messageBus.PublishMessage(cart, _configuration.GetValue<string>("TopicAndQueueNames:EmailShoppingCart"));
 
                 return NoContent();
             }
