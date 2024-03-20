@@ -21,6 +21,39 @@ namespace Orange.Web.Controllers
             return View(userCart);
         }
 
+        [Authorize]
+        public async Task<IActionResult> Remove(int cartDetailsId)
+        {
+            bool itemRemoved = await _cartService.RemoveFromCartAsync(cartDetailsId);
+            if (itemRemoved)
+            {
+                TempData["success"] = "Item removed from cart";
+            }
+            else
+            {
+                TempData["error"] = "Error to remove item from cart";
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> ApplyCoupon(CartDTO cart)
+        {
+            bool couponApplied = await _cartService.ApplyCouponAsync(cart);
+            if (couponApplied)
+            {
+                TempData["success"] = "Coupon applied";
+            }
+            else
+            {
+                TempData["error"] = "Coupon not found";
+            }
+
+            return RedirectToAction("Index");
+        }
+
         private async Task<CartDTO> LoadUserCartAsync()
         {
             string? userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
