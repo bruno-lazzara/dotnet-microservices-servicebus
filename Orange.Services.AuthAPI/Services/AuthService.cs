@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Orange.MessageBus;
 using Orange.Models.DTO.Auth;
 using Orange.Services.AuthAPI.Data;
 using Orange.Services.AuthAPI.Models;
@@ -12,12 +14,16 @@ namespace Orange.Services.AuthAPI.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ITokenService _tokenService;
-        public AuthService(OrangeDbContext dbContext, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, ITokenService tokenService)
+        private readonly IMessageBus _messageBus;
+        private readonly IConfiguration _configuration;
+        public AuthService(OrangeDbContext dbContext, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, ITokenService tokenService, IMessageBus messageBus, IConfiguration configuration)
         {
             _context = dbContext;
             _userManager = userManager;
             _roleManager = roleManager;
             _tokenService = tokenService;
+            _messageBus = messageBus;
+            _configuration = configuration;
         }
 
         public async Task<bool> AssignRoleAsync(string email, string roleName)
@@ -113,6 +119,8 @@ namespace Orange.Services.AuthAPI.Services
                     Name = user.Name,
                     PhoneNumber = user.PhoneNumber,
                 };
+
+                await _messageBus.PublishMessage(userDTO.Email, _configuration.GetValue<string>("TopicAndQueueNames:EmailRegisteredUserQueue"));
 
                 return userDTO;
             }
