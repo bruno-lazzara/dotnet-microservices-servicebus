@@ -58,7 +58,9 @@ namespace Orange.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> EmailCart(CartDTO cart)
         {
-            bool emailSent = await _cartService.EmailCartAsync(cart);
+            var fullCart = await LoadUserCartAsync();
+            fullCart.CartHeader.Email = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Email)?.FirstOrDefault()?.Value;
+            bool emailSent = await _cartService.EmailCartAsync(fullCart);
             if (emailSent)
             {
                 TempData["success"] = "E-mail will be processed and sent shortly";
