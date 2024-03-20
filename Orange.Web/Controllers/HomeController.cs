@@ -1,3 +1,4 @@
+using IdentityModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Orange.Models.DTO;
@@ -10,10 +11,11 @@ namespace Orange.Web.Controllers
     public class HomeController : Controller
     {
         private readonly IProductService _productService;
-
-        public HomeController(IProductService productService)
+        private readonly ICartService _cartService;
+        public HomeController(IProductService productService, ICartService cartService)
         {
             _productService = productService;
+            _cartService = cartService;
         }
 
         public async Task<IActionResult> Index()
@@ -32,6 +34,37 @@ namespace Orange.Web.Controllers
                 return RedirectToAction("Index");
             }
             return View(product);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Details(ProductDTO product)
+        {
+            CartDTO cart = new()
+            {
+                CartHeader = new CartHeaderDTO
+                {
+                    UserId = User.Claims.Where(u => u.Type == JwtClaimTypes.Subject)?.FirstOrDefault()?.Value
+                },
+                CartDetails =
+                [
+                    new CartDetailsDTO {
+                        Count = product.Count,
+                        ProductId = product.ProductId
+                    }
+                ]
+            };
+
+            var cartResponse = await _cartService.UpsertCartAsync(cart);
+            if (cartResponse == null)
+            {
+                TempData["error"] = "Error to add product to the cart";
+                return RedirectToAction("Details", new { id = product.ProductId });
+            }
+
+            TempData["success"] = "Item added to the cart";
+
+            return RedirectToAction("Index");
         }
 
         public IActionResult Privacy()
