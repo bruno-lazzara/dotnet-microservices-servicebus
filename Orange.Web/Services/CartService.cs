@@ -32,6 +32,25 @@ namespace Orange.Web.Services
             }
         }
 
+        public async Task<bool> EmailCartAsync(CartDTO cart)
+        {
+            try
+            {
+                var response = await _baseService.SendAsync(new RequestDTO
+                {
+                    HttpMethod = HttpMethod.Post,
+                    Url = Routes.CartAPI + $"/api/cart/EmailCartRequest",
+                    Data = cart
+                });
+
+                return response != null && response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
         public async Task<CartDTO?> GetCartByUserIdAsync(string userId)
         {
             CartDTO? cart = null;

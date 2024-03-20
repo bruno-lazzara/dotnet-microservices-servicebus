@@ -54,6 +54,23 @@ namespace Orange.Web.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> EmailCart(CartDTO cart)
+        {
+            bool emailSent = await _cartService.EmailCartAsync(cart);
+            if (emailSent)
+            {
+                TempData["success"] = "E-mail will be processed and sent shortly";
+            }
+            else
+            {
+                TempData["error"] = "Service not available";
+            }
+
+            return RedirectToAction("Index");
+        }
+
         private async Task<CartDTO> LoadUserCartAsync()
         {
             string? userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;

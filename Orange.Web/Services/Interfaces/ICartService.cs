@@ -8,5 +8,6 @@ namespace Orange.Web.Services.Interfaces
         Task<CartDTO?> UpsertCartAsync(CartDTO cart);
         Task<bool> RemoveFromCartAsync(int cartDetailsId);
         Task<bool> ApplyCouponAsync(CartDTO cart);
+        Task<bool> EmailCartAsync(CartDTO cart);
     }
 }
