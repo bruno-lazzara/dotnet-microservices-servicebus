@@ -91,24 +91,6 @@ namespace Orange.Services.ShoppingCartAPI.Controllers
             }
         }
 
-        [HttpPost("RemoveCoupon")]
-        public async Task<IActionResult> RemoveCoupon([FromBody] CartDTO cart)
-        {
-            try
-            {
-                var cartFromDb = await _context.CartHeaders.FirstAsync(ch => ch.UserId == cart.CartHeader.UserId);
-                cartFromDb.CouponCode = "";
-                _context.CartHeaders.Update(cartFromDb);
-                await _context.SaveChangesAsync();
-
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest();
-            }
-        }
-
         [HttpPost("CartUpsert")]
         public async Task<IActionResult> CartUpsert(CartDTO cartDTO)
         {
