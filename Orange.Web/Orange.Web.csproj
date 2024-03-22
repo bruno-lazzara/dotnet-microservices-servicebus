@@ -16,4 +16,8 @@
     <ProjectReference Include="..\Orange.Models\Orange.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\" />
+  </ItemGroup>
+
 </Project>

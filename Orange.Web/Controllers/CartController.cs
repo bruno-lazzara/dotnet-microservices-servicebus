@@ -53,6 +53,12 @@ namespace Orange.Web.Controllers
         }
 
         [Authorize]
+        public async Task<IActionResult> Confirmation(int orderId)
+        {
+            return View(orderId);
+        }
+
+        [Authorize]
         public async Task<IActionResult> Remove(int cartDetailsId)
         {
             bool itemRemoved = await _cartService.RemoveFromCartAsync(cartDetailsId);
