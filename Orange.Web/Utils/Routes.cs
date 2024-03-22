@@ -8,11 +8,13 @@
             CouponAPI = configuration["CouponAPI"] ?? string.Empty;
             AuthAPI = configuration["AuthAPI"] ?? string.Empty;
             CartAPI = configuration["CartAPI"] ?? string.Empty;
+            OrderAPI = configuration["OrderAPI"] ?? string.Empty;
         }
 
         public static string ProductAPI { get; private set; } = string.Empty;
         public static string CouponAPI { get; private set; } = string.Empty;
         public static string AuthAPI { get; private set; } = string.Empty;
         public static string CartAPI { get; private set; } = string.Empty;
+        public static string OrderAPI { get; private set; } = string.Empty;
     }
 }
