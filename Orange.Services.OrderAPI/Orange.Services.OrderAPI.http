@@ -1,0 +1,6 @@
+@Orange.Services.OrderAPI_HostAddress = http://localhost:5178
+
+GET {{Orange.Services.OrderAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
