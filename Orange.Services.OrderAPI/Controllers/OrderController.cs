@@ -6,6 +6,7 @@ using Orange.Services.OrderAPI.Data;
 using Orange.Services.OrderAPI.Models.Entity;
 using Orange.Services.OrderAPI.Services.Interfaces;
 using Orange.Services.OrderAPI.Utility;
+using Stripe.Checkout;
 using System.Net;
 
 namespace Orange.Services.OrderAPI.Controllers
@@ -42,6 +43,56 @@ namespace Orange.Services.OrderAPI.Controllers
                 orderHeaderDTO.OrderHeaderId = orderCreated.OrderHeaderId;
 
                 return StatusCode((int)HttpStatusCode.Created, orderHeaderDTO);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
+        [Authorize]
+        [HttpPost("CreateStripeSession")]
+        public async Task<IActionResult> CreateStripeSession([FromBody] StripeRequestDTO stripeRequestDTO)
+        {
+            try
+            {
+                var options = new Stripe.Checkout.SessionCreateOptions
+                {
+                    SuccessUrl = stripeRequestDTO.ApprovedUrl,
+                    CancelUrl = stripeRequestDTO.CancelUrl,
+                    LineItems = [],
+                    Mode = "payment",
+                };
+
+                foreach (var item in stripeRequestDTO.OrderHeader.OrderDetails)
+                {
+                    var sessionLineItem = new SessionLineItemOptions
+                    {
+                        PriceData = new SessionLineItemPriceDataOptions
+                        {
+                            UnitAmount = (long)(item.ProductPrice * 100),
+                            Currency = "usd",
+                            ProductData = new SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = item.ProductName
+                            }
+                        },
+                        Quantity = item.Count
+                    };
+
+                    options.LineItems.Add(sessionLineItem);
+                }
+
+                var service = new SessionService();
+                Session stripeSession = service.Create(options);
+
+                stripeRequestDTO.StripeSessionUrl = stripeSession.Url;
+
+                OrderHeader orderHeader = _context.OrderHeaders.First(h => h.OrderHeaderId == stripeRequestDTO.OrderHeader.OrderHeaderId);
+                orderHeader.StripeSessionId = stripeSession.Id;
+                await _context.SaveChangesAsync();
+
+                return StatusCode((int)HttpStatusCode.Created, stripeRequestDTO);
             }
             catch (Exception ex)
             {
