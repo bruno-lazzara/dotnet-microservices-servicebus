@@ -61,8 +61,19 @@ namespace Orange.Services.OrderAPI.Controllers
                     SuccessUrl = stripeRequestDTO.ApprovedUrl,
                     CancelUrl = stripeRequestDTO.CancelUrl,
                     LineItems = [],
-                    Mode = "payment",
+                    Mode = "payment"
                 };
+
+                if (stripeRequestDTO.OrderHeader.Discount > 0)
+                {
+                    options.Discounts =
+                    [
+                        new SessionDiscountOptions
+                        {
+                            Coupon = stripeRequestDTO.OrderHeader.CouponCode
+                        }
+                    ];
+                }
 
                 foreach (var item in stripeRequestDTO.OrderHeader.OrderDetails)
                 {
