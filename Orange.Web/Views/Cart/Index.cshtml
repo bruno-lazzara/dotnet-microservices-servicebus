@@ -52,7 +52,7 @@
                                 <div style="font-size:11px;">@Html.Raw(item.Product?.Description)</div>
                             </div>
                             <div class="col-3 col-md-2 pt-md-4" style="font-size:11px;">
-                                <span style="font-size:17px;">@item.Product?.Price.ToString("c")</span>
+                                <span style="font-size:17px;">@item.Product?.Price.ToString("c", CultureInfo.CreateSpecificCulture("en-US"))</span>
                             </div>
                             <div class="col-3 col-md-2 pt-md-4" style="font-size:11px;">
                                 <span style="font-size:17px;">@item.Count</span>
@@ -82,8 +82,8 @@
                             }
                         </div>
                         <div class="col-6 text-end">
-                            <span class="text-danger" style="font-size:21px;">  Order Total : @Model.CartHeader.CartTotal.ToString("c") <br /></span>
-                            <span class="text-success"> Order Discount :  @Model.CartHeader.Discount.ToString("c")</span>
+                            <span class="text-danger" style="font-size:21px;">  Order Total : @Model.CartHeader.CartTotal.ToString("c", CultureInfo.CreateSpecificCulture("en-US")) <br /></span>
+                            <span class="text-success"> Order Discount :  @Model.CartHeader.Discount.ToString("c", CultureInfo.CreateSpecificCulture("en-US"))</span>
                         </div>
                     </div>
                 </div>

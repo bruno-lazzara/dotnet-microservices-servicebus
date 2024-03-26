@@ -68,7 +68,7 @@
                                 </div>
 
                                 <div class="col-3" style="font-size:11px;">
-                                    <span style="font-size:17px;">@item.Product.Price.ToString("c")</span>
+                                    <span style="font-size:17px;">@item.Product.Price.ToString("c", CultureInfo.CreateSpecificCulture("en-US"))</span>
 
                                 </div>
                                 <div class="col-3" style="font-size:11px;">
@@ -80,8 +80,8 @@
 
                         <div class="row">
                             <div class="col-12 text-center pr-4 text-danger">
-                                Order Total: @Model.CartHeader.CartTotal.ToString("c") <br />
-                                <span class="text-success"> Order Discount: @Model.CartHeader.Discount.ToString("c")</span>
+                                Order Total: @Model.CartHeader.CartTotal.ToString("c", CultureInfo.CreateSpecificCulture("en-US")) <br />
+                                <span class="text-success"> Order Discount: @Model.CartHeader.Discount.ToString("c", CultureInfo.CreateSpecificCulture("en-US"))</span>
                             </div>
                         </div>
 

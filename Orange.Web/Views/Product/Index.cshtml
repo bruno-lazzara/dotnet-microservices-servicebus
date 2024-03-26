@@ -46,7 +46,7 @@
                             @item.CategoryName
                         </td>
                         <td>
-                            @item.Price.ToString("c")
+                            @item.Price.ToString("c", CultureInfo.CreateSpecificCulture("en-US"))
                         </td>
                         <td>
                             <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.ProductId">

@@ -13,7 +13,7 @@
                     <h1 class="text-white">@Model.Name</h1>
                 </div>
                 <div class="col-12 col-md-6 text-end">
-                    <h1 class="text-warning">@Model.Price.ToString("c")</h1>
+                    <h1 class="text-warning">@Model.Price.ToString("c", CultureInfo.CreateSpecificCulture("en-US"))</h1>
                 </div>
             </div>
             <div class="card-body">
