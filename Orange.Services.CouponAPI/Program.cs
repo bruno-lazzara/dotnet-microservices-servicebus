@@ -23,6 +23,8 @@ builder.AddAppAuthentication();
 
 builder.Services.AddAuthorization();
 
+Stripe.StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:Key").Get<string>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

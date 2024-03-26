@@ -94,6 +94,16 @@ namespace Orange.Services.CouponAPI.Controllers
                 _context.Coupons.Add(coupon);
                 _context.SaveChanges();
 
+                var options = new Stripe.CouponCreateOptions
+                {
+                    AmountOff = (long)(coupon.DiscountAmount * 100),
+                    Name = coupon.CouponCode,
+                    Id = coupon.CouponCode,
+                    Currency = "usd"
+                };
+                var service = new Stripe.CouponService();
+                service.Create(options);
+
                 var couponDTOResponse = _mapper.Map<CouponDTO>(coupon);
 
                 return StatusCode(201, couponDTOResponse);
@@ -138,6 +148,9 @@ namespace Orange.Services.CouponAPI.Controllers
 
                 _context.Coupons.Remove(coupon);
                 _context.SaveChanges();
+
+                var service = new Stripe.CouponService();
+                service.Delete(coupon.CouponCode);
 
                 return NoContent();
             }
