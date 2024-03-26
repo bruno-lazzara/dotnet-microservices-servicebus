@@ -3,9 +3,9 @@ using Orange.MessageBus;
 using Orange.Services.OrderAPI.Data;
 using Orange.Services.OrderAPI.Extensions;
 using Orange.Services.OrderAPI.Mappings;
+using Orange.Services.OrderAPI.Services;
 using Orange.Services.OrderAPI.Services.Interfaces;
 using Orange.Services.OrderAPI.Utility;
-using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,7 +27,7 @@ builder.Services.AddScoped<ApiHttpClientHandler>();
 builder.Services.AddHttpClient("Product", c => c.BaseAddress = new Uri(builder.Configuration["ServiceUrls:ProductAPI"]))
     .AddHttpMessageHandler<ApiHttpClientHandler>();
 
-builder.Services.AddScoped<IProductService, Orange.Services.OrderAPI.Services.ProductService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IMessageBus, MessageBus>();
 
 builder.Services.AddAutoMapper(typeof(MappingConfig));
@@ -36,7 +36,7 @@ builder.AddAppAuthentication();
 
 builder.Services.AddAuthorization();
 
-StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:Key").Get<string>();
+Stripe.StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:Key").Get<string>();
 
 var app = builder.Build();
 

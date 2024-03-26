@@ -47,6 +47,22 @@ namespace Orange.Web.Controllers
             else
             {
                 //TODO - get stripe session and redirect to stripe to place the order
+                var domain = Request.Scheme + "://" + Request.Host.Value;
+
+                StripeRequestDTO stripeRequest = new()
+                {
+                    ApprovedUrl = $"{domain}/cart/Confirmation?orderId={order.OrderHeaderId}",
+                    CancelUrl = $"{domain}/cart/Checkout",
+                    OrderHeader = order,
+                };
+
+                var stripeResponse = await _orderService.CreateStripeSessionAsync(stripeRequest);
+                if (stripeResponse != null)
+                {
+                    Response.Headers.Append("Location", stripeResponse.StripeSessionUrl);
+
+                    return new StatusCodeResult(303);
+                }
             }
 
             return View();

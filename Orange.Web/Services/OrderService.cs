@@ -37,5 +37,31 @@ namespace Orange.Web.Services
             }
             return orderResponse;
         }
+
+        public async Task<StripeRequestDTO?> CreateStripeSessionAsync(StripeRequestDTO stripeRequest)
+        {
+            StripeRequestDTO? stripeResponse = null;
+            try
+            {
+                var response = await _baseService.SendAsync(new RequestDTO
+                {
+                    HttpMethod = HttpMethod.Post,
+                    Url = Routes.OrderAPI + $"/api/order/CreateStripeSession",
+                    Data = stripeRequest
+                });
+
+                if (response != null && response.IsSuccessStatusCode)
+                {
+                    string content = await response.Content.ReadAsStringAsync();
+                    stripeResponse = JsonConvert.DeserializeObject<StripeRequestDTO>(content);
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return stripeResponse;
+        }
     }
 }
