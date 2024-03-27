@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Orange.Services.RewardAPI.Data;
+using Orange.Services.RewardAPI.Extensions;
+using Orange.Services.RewardAPI.Messaging;
+using Orange.Services.RewardAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +17,12 @@ builder.Services.AddDbContext<OrangeDbContext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+var optionBuilder = new DbContextOptionsBuilder<OrangeDbContext>();
+optionBuilder.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+builder.Services.AddSingleton(new RewardService(optionBuilder.Options));
+
+builder.Services.AddSingleton<IServiceBusConsumer, ServiceBusConsumer>();
 
 var app = builder.Build();
 
@@ -31,6 +40,8 @@ app.UseAuthorization();
 app.MapControllers();
 
 ApplyMigrations();
+
+app.UseAzureServiceBusConsumer();
 
 app.Run();
 
