@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Orange.Models.DTO;
 using Orange.Services.EmailAPI.Data;
+using Orange.Services.EmailAPI.Message;
 using Orange.Services.EmailAPI.Models.Entity;
 using System.Text;
 
@@ -15,7 +16,7 @@ namespace Orange.Services.EmailAPI.Services
             _dbOptions = dbOptions;
         }
 
-        public async Task EmailCartAndLog(CartDTO cartDTO)
+        public async Task EmailCartAndLogAsync(CartDTO cartDTO)
         {
             StringBuilder message = new();
 
@@ -31,16 +32,22 @@ namespace Orange.Services.EmailAPI.Services
             }
             message.Append("</ul>");
 
-            await LogAndEmail(message.ToString(), cartDTO.CartHeader.Email);
+            await LogAndEmailAsync(message.ToString(), cartDTO.CartHeader.Email);
         }
 
-        public async Task RegisterUserEmailAndLog(string email)
+        public async Task LogOrderPlacedAsync(RewardsMessage rewardsMessage)
+        {
+            string message = $"New order placed. <br /> Order ID: {rewardsMessage.OrderId}";
+            await LogAndEmailAsync(message, "test@test.com");
+        }
+
+        public async Task RegisterUserEmailAndLogAsync(string email)
         {
             string message = $"User registration successful. <br /> Email: {email}";
-            await LogAndEmail(message, email);
+            await LogAndEmailAsync(message, email);
         }
 
-        private async Task<bool> LogAndEmail(string message, string email)
+        private async Task<bool> LogAndEmailAsync(string message, string email)
         {
             try
             {
