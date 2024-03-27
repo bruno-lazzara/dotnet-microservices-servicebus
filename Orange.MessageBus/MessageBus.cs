@@ -6,7 +6,7 @@ namespace Orange.MessageBus
 {
     public class MessageBus : IMessageBus
     {
-        public async Task PublishMessage(object message, string topicQueueName)
+        public async Task PublishMessageAsync(object message, string topicQueueName)
         {
             await using var client = new ServiceBusClient(Constants.ConnectionString);
 

@@ -120,7 +120,7 @@ namespace Orange.Services.AuthAPI.Services
                     PhoneNumber = user.PhoneNumber,
                 };
 
-                await _messageBus.PublishMessage(userDTO.Email, _configuration.GetValue<string>("TopicAndQueueNames:EmailRegisteredUserQueue"));
+                await _messageBus.PublishMessageAsync(userDTO.Email, _configuration.GetValue<string>("TopicAndQueueNames:EmailRegisteredUserQueue"));
 
                 return userDTO;
             }

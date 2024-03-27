@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Orange.MessageBus;
 using Orange.Models.DTO;
 using Orange.Services.OrderAPI.Data;
 using Orange.Services.OrderAPI.Models.Entity;
 using Orange.Services.OrderAPI.Services.Interfaces;
-using Orange.Services.OrderAPI.Utility;
 using Stripe;
 using Stripe.Checkout;
 using System.Net;
@@ -19,11 +19,15 @@ namespace Orange.Services.OrderAPI.Controllers
         private readonly IMapper _mapper;
         private readonly OrangeDbContext _context;
         private readonly IProductService _productService;
-        public OrderController(IMapper mapper, OrangeDbContext context, IProductService productService)
+        private readonly IMessageBus _messageBus;
+        private readonly IConfiguration _configuration;
+        public OrderController(IMapper mapper, OrangeDbContext context, IProductService productService, IMessageBus messageBus, IConfiguration configuration)
         {
             _mapper = mapper;
             _context = context;
             _productService = productService;
+            _messageBus = messageBus;
+            _configuration = configuration;
         }
 
         [HttpPost("CreateOrder")]
@@ -34,7 +38,7 @@ namespace Orange.Services.OrderAPI.Controllers
             {
                 OrderHeaderDTO orderHeaderDTO = _mapper.Map<OrderHeaderDTO>(cart.CartHeader);
                 orderHeaderDTO.OrderTime = DateTime.Now;
-                orderHeaderDTO.Status = Constants.STATUS_PENDING;
+                orderHeaderDTO.Status = Utility.Constants.STATUS_PENDING;
                 orderHeaderDTO.OrderDetails = _mapper.Map<IEnumerable<OrderDetailsDTO>>(cart.CartDetails);
 
                 OrderHeader orderCreated = _mapper.Map<OrderHeader>(orderHeaderDTO);
@@ -129,8 +133,19 @@ namespace Orange.Services.OrderAPI.Controllers
                 if (paymentIntent.Status == "succeeded")
                 {
                     orderHeader.PaymentIntentId = paymentIntent.Id;
-                    orderHeader.Status = Constants.STATUS_APPROVED;
+                    orderHeader.Status = Utility.Constants.STATUS_APPROVED;
                     await _context.SaveChangesAsync();
+
+                    RewardsDTO rewardsDTO = new()
+                    {
+                        OrderId = orderHeader.OrderHeaderId,
+                        RewardsActivity = Convert.ToInt32(orderHeader.OrderTotal),
+                        UserId = orderHeader.UserId
+                    };
+
+                    string topicName = _configuration.GetValue<string>("TopicAndQueueNames:OrderCreatedTopic");
+
+                    await _messageBus.PublishMessageAsync(rewardsDTO, topicName);
                 }
 
                 return Ok(_mapper.Map<OrderHeaderDTO>(orderHeader));
