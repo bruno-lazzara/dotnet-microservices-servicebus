@@ -6,6 +6,7 @@ using Orange.Services.OrderAPI.Data;
 using Orange.Services.OrderAPI.Models.Entity;
 using Orange.Services.OrderAPI.Services.Interfaces;
 using Orange.Services.OrderAPI.Utility;
+using Stripe;
 using Stripe.Checkout;
 using System.Net;
 
@@ -104,6 +105,35 @@ namespace Orange.Services.OrderAPI.Controllers
                 await _context.SaveChangesAsync();
 
                 return StatusCode((int)HttpStatusCode.Created, stripeRequestDTO);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
+        [Authorize]
+        [HttpPost("ValidateStripeSession")]
+        public async Task<IActionResult> ValidateStripeSession([FromBody] int orderHeaderId)
+        {
+            try
+            {
+                OrderHeader orderHeader = _context.OrderHeaders.First(h => h.OrderHeaderId == orderHeaderId);
+
+                var service = new SessionService();
+                Session stripeSession = await service.GetAsync(orderHeader.StripeSessionId);
+
+                var paymentIntentService = new PaymentIntentService();
+                PaymentIntent paymentIntent = await paymentIntentService.GetAsync(stripeSession.PaymentIntentId);
+
+                if (paymentIntent.Status == "succeeded")
+                {
+                    orderHeader.PaymentIntentId = paymentIntent.Id;
+                    orderHeader.Status = Constants.STATUS_APPROVED;
+                    await _context.SaveChangesAsync();
+                }
+
+                return Ok(_mapper.Map<OrderHeaderDTO>(orderHeader));
             }
             catch (Exception ex)
             {
