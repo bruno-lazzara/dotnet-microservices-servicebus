@@ -6,5 +6,6 @@ namespace Orange.Web.Services.Interfaces
     {
         Task<OrderHeaderDTO?> CreateOrderAsync(CartDTO cart);
         Task<StripeRequestDTO?> CreateStripeSessionAsync(StripeRequestDTO stripeRequest);
+        Task<OrderHeaderDTO?> ValidateStripeSessionAsync(int orderHeaderId);
     }
 }

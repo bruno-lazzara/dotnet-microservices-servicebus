@@ -63,5 +63,30 @@ namespace Orange.Web.Services
 
             return stripeResponse;
         }
+
+        public async Task<OrderHeaderDTO?> ValidateStripeSessionAsync(int orderHeaderId)
+        {
+            OrderHeaderDTO? orderResponse = null;
+            try
+            {
+                var response = await _baseService.SendAsync(new RequestDTO
+                {
+                    HttpMethod = HttpMethod.Post,
+                    Url = Routes.OrderAPI + $"/api/order/ValidateStripeSession",
+                    Data = orderHeaderId
+                });
+
+                if (response != null && response.IsSuccessStatusCode)
+                {
+                    string content = await response.Content.ReadAsStringAsync();
+                    orderResponse = JsonConvert.DeserializeObject<OrderHeaderDTO>(content);
+                }
+            }
+            catch (Exception ex)
+            {
+                
+            }
+            return orderResponse;
+        }
     }
 }

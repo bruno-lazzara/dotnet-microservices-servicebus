@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Orange.Models.DTO;
 using Orange.Web.Services.Interfaces;
+using Orange.Web.Utils;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace Orange.Web.Controllers
@@ -71,6 +72,12 @@ namespace Orange.Web.Controllers
         [Authorize]
         public async Task<IActionResult> Confirmation(int orderId)
         {
+            var order = await _orderService.ValidateStripeSessionAsync(orderId);
+            if (order != null && order.Status == Constants.STATUS_APPROVED)
+            {
+                return View(orderId);
+            }
+            //redirect to another page based on the order status
             return View(orderId);
         }
 
