@@ -1,4 +1,6 @@
-﻿namespace Orange.Models.DTO
+﻿using System.Globalization;
+
+namespace Orange.Models.DTO
 {
     public class OrderHeaderDTO
     {
@@ -15,5 +17,7 @@
         public string? PaymentIntentId { get; set; }
         public string? StripeSessionId { get; set; }
         public IEnumerable<OrderDetailsDTO> OrderDetails { get; set; }
+
+        public string OrderTotalCurrency => OrderTotal.ToString("c", CultureInfo.CreateSpecificCulture("en-US"));
     }
 }

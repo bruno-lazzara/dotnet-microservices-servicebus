@@ -45,5 +45,53 @@ namespace Orange.Web.Controllers
 
             return Json(new { data = list });
         }
+
+        [HttpPost("OrderReadyForPickup")]
+        public async Task<IActionResult> OrderReadyForPickup(int orderId)
+        {
+            var statusUpdated = await _orderService.UpdateOrderStatusAsync(orderId, Constants.STATUS_READY);
+            if (statusUpdated)
+            {
+                TempData["success"] = "Order status updated successfully";
+            }
+            else
+            {
+                TempData["error"] = "Error on updating order status";
+            }
+
+            return RedirectToAction(nameof(Detail), new { orderId });
+        }
+
+        [HttpPost("CompleteOrder")]
+        public async Task<IActionResult> CompleteOrder(int orderId)
+        {
+            var statusUpdated = await _orderService.UpdateOrderStatusAsync(orderId, Constants.STATUS_COMPLETED);
+            if (statusUpdated)
+            {
+                TempData["success"] = "Order status updated successfully";
+            }
+            else
+            {
+                TempData["error"] = "Error on updating order status";
+            }
+
+            return RedirectToAction(nameof(Detail), new { orderId });
+        }
+
+        [HttpPost("CancelOrder")]
+        public async Task<IActionResult> CancelOrder(int orderId)
+        {
+            var statusUpdated = await _orderService.UpdateOrderStatusAsync(orderId, Constants.STATUS_CANCELED);
+            if (statusUpdated)
+            {
+                TempData["success"] = "Order status updated successfully";
+            }
+            else
+            {
+                TempData["error"] = "Error on updating order status";
+            }
+
+            return RedirectToAction(nameof(Detail), new { orderId });
+        }
     }
 }
