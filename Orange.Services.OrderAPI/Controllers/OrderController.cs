@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Orange.MessageBus;
+using Microsoft.EntityFrameworkCore;
 using Orange.Models.DTO;
 using Orange.Services.OrderAPI.Data;
+using Orange.Services.OrderAPI.Extensions;
 using Orange.Services.OrderAPI.Models.Entity;
 using Orange.Services.OrderAPI.Services.Interfaces;
+using Orange.Services.OrderAPI.Utility;
 using Stripe;
 using Stripe.Checkout;
 using System.Net;
@@ -19,15 +21,60 @@ namespace Orange.Services.OrderAPI.Controllers
         private readonly IMapper _mapper;
         private readonly OrangeDbContext _context;
         private readonly IProductService _productService;
-        private readonly IMessageBus _messageBus;
+        private readonly MessageBus.IMessageBus _messageBus;
         private readonly IConfiguration _configuration;
-        public OrderController(IMapper mapper, OrangeDbContext context, IProductService productService, IMessageBus messageBus, IConfiguration configuration)
+        public OrderController(IMapper mapper, OrangeDbContext context, IProductService productService, MessageBus.IMessageBus messageBus, IConfiguration configuration)
         {
             _mapper = mapper;
             _context = context;
             _productService = productService;
             _messageBus = messageBus;
             _configuration = configuration;
+        }
+
+        [Authorize]
+        [HttpGet("GetOrders")]
+        public async Task<IActionResult> Get(string? userId = "")
+        {
+            try
+            {
+                IEnumerable<OrderHeader> orders;
+                if (User.IsInRole(Constants.ROLE_ADMIN))
+                {
+                    orders = await _context.OrderHeaders.Include(oh => oh.OrderDetails).OrderByDescending(oh => oh.OrderHeaderId).ToListAsync();
+                }
+                else
+                {
+                    orders = await _context.OrderHeaders.Include(oh => oh.OrderDetails).Where(oh => oh.UserId == userId).OrderByDescending(oh => oh.OrderHeaderId).ToListAsync();
+                }
+
+                return Ok(orders);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
+        [Authorize]
+        [HttpGet("GetOrder/{id:int}")]
+        public async Task<IActionResult> Get(int id)
+        {
+            try
+            {
+                var order = await _context.OrderHeaders.Include(oh => oh.OrderDetails).FirstOrDefaultAsync(oh => oh.OrderHeaderId == id);
+                if (order == null)
+                {
+                    return NotFound("Order not found.");
+                }
+
+                var orderDto = _mapper.Map<OrderHeaderDTO>(order);
+                return Ok(orderDto);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPost("CreateOrder")]
@@ -149,6 +196,41 @@ namespace Orange.Services.OrderAPI.Controllers
                 }
 
                 return Ok(_mapper.Map<OrderHeaderDTO>(orderHeader));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
+        [Authorize]
+        [HttpPost("UpdateOrderStatus/{orderId:int}")]
+        public async Task<IActionResult> UpdateOrderStatus(int orderId, [FromBody] string newStatus)
+        {
+            try
+            {
+                OrderHeader? order = await _context.OrderHeaders.FirstOrDefaultAsync(oh => oh.OrderHeaderId == orderId);
+                if (order == null)
+                {
+                    return NotFound("Order not found.");
+                }
+
+                if (newStatus == Constants.STATUS_CANCELED)
+                {
+                    var refundOptions = new RefundCreateOptions
+                    {
+                        Reason = RefundReasons.RequestedByCustomer,
+                        PaymentIntent = order.PaymentIntentId,
+                    };
+
+                    var refundService = new RefundService();
+                    Refund refund = await refundService.CreateAsync(refundOptions);   
+                }
+
+                order.Status = newStatus;
+                await _context.SaveChangesAsync();
+
+                return NoContent();
             }
             catch (Exception ex)
             {
