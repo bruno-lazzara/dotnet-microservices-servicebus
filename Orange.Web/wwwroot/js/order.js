@@ -18,7 +18,7 @@ function loadDataTable() {
                 data: 'orderHeaderId',
                 "render": function (data) {
                     return `<div class="w-100 btn-group" role="group">
-                        <a href="/order/orderDetail?orderId=${data}" class="btn btn-primary mx-2"><i class="bi bi-pencil-square"></i></a>
+                        <a href="/order/detail?orderId=${data}" class="btn btn-primary mx-2"><i class="bi bi-pencil-square"></i></a>
                     </div>`
                 },
                 "width": "5%"

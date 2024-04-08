@@ -19,6 +19,17 @@ namespace Orange.Web.Controllers
             return View();
         }
 
+        public async Task<IActionResult> Detail(int orderId)
+        {
+            OrderHeaderDTO? order = await _orderService.GetOrderByIdAsync(orderId);
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            return View(order);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -30,7 +41,7 @@ namespace Orange.Web.Controllers
                 userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub).FirstOrDefault()?.Value;
             }
 
-            list = (await _orderService.GetAllOrders(userId)).ToList();
+            list = (await _orderService.GetAllOrdersAsync(userId)).ToList();
 
             return Json(new { data = list });
         }

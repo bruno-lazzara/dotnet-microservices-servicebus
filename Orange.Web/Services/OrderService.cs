@@ -64,7 +64,7 @@ namespace Orange.Web.Services
             return stripeResponse;
         }
 
-        public async Task<IEnumerable<OrderHeaderDTO>> GetAllOrders(string? userId)
+        public async Task<IEnumerable<OrderHeaderDTO>> GetAllOrdersAsync(string? userId)
         {
             IEnumerable<OrderHeaderDTO>? orderResponse = [];
             try
@@ -88,7 +88,7 @@ namespace Orange.Web.Services
             return orderResponse ?? [];
         }
 
-        public async Task<OrderHeaderDTO?> GetOrder(int orderId)
+        public async Task<OrderHeaderDTO?> GetOrderByIdAsync(int orderId)
         {
             OrderHeaderDTO? orderResponse = null;
             try
@@ -112,7 +112,7 @@ namespace Orange.Web.Services
             return orderResponse;
         }
 
-        public async Task<bool> UpdateOrderStatus(int orderId, string newStatus)
+        public async Task<bool> UpdateOrderStatusAsync(int orderId, string newStatus)
         {
             try
             {
