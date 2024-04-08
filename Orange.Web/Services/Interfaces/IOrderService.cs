@@ -7,7 +7,7 @@ namespace Orange.Web.Services.Interfaces
         Task<OrderHeaderDTO?> CreateOrderAsync(CartDTO cart);
         Task<StripeRequestDTO?> CreateStripeSessionAsync(StripeRequestDTO stripeRequest);
         Task<OrderHeaderDTO?> ValidateStripeSessionAsync(int orderHeaderId);
-        Task<OrderHeaderDTO?> GetAllOrders(string? userId);
+        Task<IEnumerable<OrderHeaderDTO>> GetAllOrders(string? userId);
         Task<OrderHeaderDTO?> GetOrder(int orderId);
         Task<bool> UpdateOrderStatus(int orderId, string newStatus);
     }

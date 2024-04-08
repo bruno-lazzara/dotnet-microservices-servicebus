@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Orange.Models.DTO;
 using Orange.Services.OrderAPI.Data;
-using Orange.Services.OrderAPI.Extensions;
 using Orange.Services.OrderAPI.Models.Entity;
 using Orange.Services.OrderAPI.Services.Interfaces;
 using Orange.Services.OrderAPI.Utility;

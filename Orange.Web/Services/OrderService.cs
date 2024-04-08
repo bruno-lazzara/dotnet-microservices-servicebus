@@ -64,9 +64,9 @@ namespace Orange.Web.Services
             return stripeResponse;
         }
 
-        public async Task<OrderHeaderDTO?> GetAllOrders(string? userId)
+        public async Task<IEnumerable<OrderHeaderDTO>> GetAllOrders(string? userId)
         {
-            OrderHeaderDTO? orderResponse = null;
+            IEnumerable<OrderHeaderDTO>? orderResponse = [];
             try
             {
                 var response = await _baseService.SendAsync(new RequestDTO
@@ -78,14 +78,14 @@ namespace Orange.Web.Services
                 if (response != null && response.IsSuccessStatusCode)
                 {
                     string content = await response.Content.ReadAsStringAsync();
-                    orderResponse = JsonConvert.DeserializeObject<OrderHeaderDTO>(content);
+                    orderResponse = JsonConvert.DeserializeObject<IEnumerable<OrderHeaderDTO>>(content);
                 }
             }
             catch (Exception ex)
             {
 
             }
-            return orderResponse;
+            return orderResponse ?? [];
         }
 
         public async Task<OrderHeaderDTO?> GetOrder(int orderId)
