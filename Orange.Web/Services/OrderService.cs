@@ -64,6 +64,73 @@ namespace Orange.Web.Services
             return stripeResponse;
         }
 
+        public async Task<OrderHeaderDTO?> GetAllOrders(string? userId)
+        {
+            OrderHeaderDTO? orderResponse = null;
+            try
+            {
+                var response = await _baseService.SendAsync(new RequestDTO
+                {
+                    HttpMethod = HttpMethod.Get,
+                    Url = Routes.OrderAPI + $"/api/order/GetOrders?userId={userId}"
+                });
+
+                if (response != null && response.IsSuccessStatusCode)
+                {
+                    string content = await response.Content.ReadAsStringAsync();
+                    orderResponse = JsonConvert.DeserializeObject<OrderHeaderDTO>(content);
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return orderResponse;
+        }
+
+        public async Task<OrderHeaderDTO?> GetOrder(int orderId)
+        {
+            OrderHeaderDTO? orderResponse = null;
+            try
+            {
+                var response = await _baseService.SendAsync(new RequestDTO
+                {
+                    HttpMethod = HttpMethod.Get,
+                    Url = Routes.OrderAPI + $"/api/order/GetOrder/{orderId}"
+                });
+
+                if (response != null && response.IsSuccessStatusCode)
+                {
+                    string content = await response.Content.ReadAsStringAsync();
+                    orderResponse = JsonConvert.DeserializeObject<OrderHeaderDTO>(content);
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return orderResponse;
+        }
+
+        public async Task<bool> UpdateOrderStatus(int orderId, string newStatus)
+        {
+            try
+            {
+                var response = await _baseService.SendAsync(new RequestDTO
+                {
+                    HttpMethod = HttpMethod.Post,
+                    Url = Routes.OrderAPI + $"/api/order/UpdateOrderStatus/{orderId}",
+                    Data = newStatus
+                });
+
+                return response != null && response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
         public async Task<OrderHeaderDTO?> ValidateStripeSessionAsync(int orderHeaderId)
         {
             OrderHeaderDTO? orderResponse = null;
