@@ -10,6 +10,7 @@ using Orange.Services.OrderAPI.Utility;
 using Stripe;
 using Stripe.Checkout;
 using System.Net;
+using System.Security.Claims;
 
 namespace Orange.Services.OrderAPI.Controllers
 {
@@ -61,8 +62,11 @@ namespace Orange.Services.OrderAPI.Controllers
         {
             try
             {
+                string? userId = User.Claims.Where(u => u.Type == ClaimTypes.NameIdentifier).FirstOrDefault()?.Value;
+
                 var order = await _context.OrderHeaders.Include(oh => oh.OrderDetails).FirstOrDefaultAsync(oh => oh.OrderHeaderId == id);
-                if (order == null)
+                if (order == null
+                    || (!User.IsInRole(Constants.ROLE_ADMIN) && order.UserId != userId))
                 {
                     return NotFound("Order not found.");
                 }
