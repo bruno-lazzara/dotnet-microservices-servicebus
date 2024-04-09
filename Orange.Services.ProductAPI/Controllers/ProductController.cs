@@ -136,6 +136,16 @@ namespace Orange.Services.ProductAPI.Controllers
                     return NotFound("Product not found.");
                 }
 
+                if (!string.IsNullOrEmpty(product.ImageLocalPathUrl))
+                {
+                    var oldFilePathDirectory = Path.Combine(Directory.GetCurrentDirectory(), product.ImageLocalPathUrl);
+                    FileInfo file = new(oldFilePathDirectory);
+                    if (file.Exists)
+                    {
+                        file.Delete();
+                    }
+                }
+
                 _context.Products.Remove(product);
                 _context.SaveChanges();
 
