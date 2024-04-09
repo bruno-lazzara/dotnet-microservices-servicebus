@@ -31,7 +31,7 @@ namespace Orange.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(string status)
         {
             List<OrderHeaderDTO> list = [];
             string? userId = null;
@@ -42,6 +42,21 @@ namespace Orange.Web.Controllers
             }
 
             list = (await _orderService.GetAllOrdersAsync(userId)).ToList();
+
+            switch (status)
+            {
+                case "approved":
+                    list = list.Where(o => o.Status == Constants.STATUS_APPROVED).ToList();
+                    break;
+                case "readyforpickup":
+                    list = list.Where(o => o.Status == Constants.STATUS_READY).ToList();
+                    break;
+                case "cancelled":
+                    list = list.Where(o => o.Status == Constants.STATUS_CANCELED).ToList();
+                    break;
+                default:
+                    break;
+            }
 
             return Json(new { data = list });
         }
