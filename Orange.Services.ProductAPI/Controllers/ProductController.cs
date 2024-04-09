@@ -64,7 +64,7 @@ namespace Orange.Services.ProductAPI.Controllers
 
         [HttpPost]
         [Authorize(Roles = Constants.ROLE_ADMIN)]
-        public async Task<ActionResult> Post([FromBody] ProductDTO productDTO)
+        public async Task<ActionResult> Post(ProductDTO productDTO)
         {
             try
             {
@@ -83,7 +83,7 @@ namespace Orange.Services.ProductAPI.Controllers
                     }
 
                     string baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}{HttpContext.Request.PathBase.Value}";
-                    product.ImageUrl = $"{baseUrl}/ProductImages/{filePath}";
+                    product.ImageUrl = $"{baseUrl}/ProductImages/{fileName}";
                     product.ImageLocalPathUrl = filePath;
                 }
                 else

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Orange.Models;
 using Orange.Models.DTO;
 using Orange.Web.Services.Interfaces;
 using Orange.Web.Utils;
@@ -22,7 +23,8 @@ namespace Orange.Web.Services
                 {
                     HttpMethod = HttpMethod.Post,
                     Url = Routes.ProductAPI + $"/api/product",
-                    Data = product
+                    Data = product,
+                    ContentType = ContentType.MultipartFormData
                 });
 
                 if (response != null && response.IsSuccessStatusCode)

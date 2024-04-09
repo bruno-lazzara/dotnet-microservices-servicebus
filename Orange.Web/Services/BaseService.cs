@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Orange.Models;
 using Orange.Models.DTO;
 using Orange.Web.Services.Interfaces;
 using System.Text;
@@ -25,7 +26,15 @@ namespace Orange.Web.Services
                 {
                     RequestUri = new Uri(request.Url)
                 };
-                message.Headers.Add("Accept", "application/json");
+
+                if (request.ContentType == ContentType.MultipartFormData)
+                {
+                    message.Headers.Add("Accept", "*/*");
+                }
+                else
+                {
+                    message.Headers.Add("Accept", "application/json");
+                }
 
                 if (withBearer)
                 {
@@ -35,8 +44,35 @@ namespace Orange.Web.Services
 
                 if (request.Data != null)
                 {
-                    message.Content = new StringContent(JsonConvert.SerializeObject(request.Data), Encoding.UTF8, "application/json");
+                    if (request.ContentType == ContentType.MultipartFormData)
+                    {
+                        var content = new MultipartFormDataContent();
+
+                        foreach (var prop in request.Data.GetType().GetProperties())
+                        {
+                            var value = prop.GetValue(request.Data);
+                            if (value is FormFile)
+                            {
+                                var file = (FormFile)value;
+                                if (file != null)
+                                {
+                                    content.Add(new StreamContent(file.OpenReadStream()), prop.Name, file.FileName);
+                                }
+                            }
+                            else
+                            {
+                                content.Add(new StringContent(value == null ? "" : value.ToString()), prop.Name);
+                            }
+                        }
+
+                        message.Content = content;
+                    }
+                    else
+                    {
+                        message.Content = new StringContent(JsonConvert.SerializeObject(request.Data), Encoding.UTF8, "application/json");
+                    }
                 }
+
                 message.Method = request.HttpMethod;
 
                 response = await client.SendAsync(message);
