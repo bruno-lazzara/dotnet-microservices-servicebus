@@ -64,13 +64,35 @@ namespace Orange.Services.ProductAPI.Controllers
 
         [HttpPost]
         [Authorize(Roles = Constants.ROLE_ADMIN)]
-        public ActionResult Post([FromBody] ProductDTO productDTO)
+        public async Task<ActionResult> Post([FromBody] ProductDTO productDTO)
         {
             try
             {
                 Product product = _mapper.Map<Product>(productDTO);
-                _context.Products.Add(product);
-                _context.SaveChanges();
+                await _context.Products.AddAsync(product);
+                await _context.SaveChangesAsync();
+
+                if (productDTO.Image != null)
+                {
+                    string fileName = product.ProductId + Path.GetExtension(productDTO.Image.FileName);
+                    string filePath = @$"wwwroot\ProductImages\{fileName}";
+                    var filePathDirectory = Path.Combine(Directory.GetCurrentDirectory(), filePath);
+                    using (var fileStream = new FileStream(filePathDirectory, FileMode.Create))
+                    {
+                        await productDTO.Image.CopyToAsync(fileStream);
+                    }
+
+                    string baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}{HttpContext.Request.PathBase.Value}";
+                    product.ImageUrl = $"{baseUrl}/ProductImages/{filePath}";
+                    product.ImageLocalPathUrl = filePath;
+                }
+                else
+                {
+                    product.ImageUrl = "https://placehold.co/600x400";
+                }
+
+                _context.Products.Update(product);
+                await _context.SaveChangesAsync();
 
                 var productDTOResponse = _mapper.Map<ProductDTO>(product);
 
