@@ -121,7 +121,8 @@ namespace Orange.Web.Services
                 {
                     HttpMethod = HttpMethod.Put,
                     Url = Routes.ProductAPI + $"/api/product",
-                    Data = product
+                    Data = product,
+                    ContentType = ContentType.MultipartFormData
                 });
 
                 if (response != null && response.IsSuccessStatusCode)

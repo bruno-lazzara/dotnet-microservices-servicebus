@@ -106,11 +106,37 @@ namespace Orange.Services.ProductAPI.Controllers
 
         [HttpPut]
         [Authorize(Roles = Constants.ROLE_ADMIN)]
-        public ActionResult Put([FromBody] ProductDTO productDTO)
+        public async Task<ActionResult> Put(ProductDTO productDTO)
         {
             try
             {
                 Product product = _mapper.Map<Product>(productDTO);
+
+                if (productDTO.Image != null)
+                {
+                    if (!string.IsNullOrEmpty(product.ImageLocalPathUrl))
+                    {
+                        var oldFilePathDirectory = Path.Combine(Directory.GetCurrentDirectory(), product.ImageLocalPathUrl);
+                        FileInfo file = new(oldFilePathDirectory);
+                        if (file.Exists)
+                        {
+                            file.Delete();
+                        }
+                    }
+
+                    string fileName = product.ProductId + Path.GetExtension(productDTO.Image.FileName);
+                    string filePath = @$"wwwroot\ProductImages\{fileName}";
+                    var filePathDirectory = Path.Combine(Directory.GetCurrentDirectory(), filePath);
+                    using (var fileStream = new FileStream(filePathDirectory, FileMode.Create))
+                    {
+                        await productDTO.Image.CopyToAsync(fileStream);
+                    }
+
+                    string baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}{HttpContext.Request.PathBase.Value}";
+                    product.ImageUrl = $"{baseUrl}/ProductImages/{fileName}";
+                    product.ImageLocalPathUrl = filePath;
+                }
+
                 _context.Products.Update(product);
                 _context.SaveChanges();
 
