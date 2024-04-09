@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Orange.Models.Utils;
 using System.ComponentModel.DataAnnotations;
 
 namespace Orange.Models.DTO
@@ -16,6 +17,8 @@ namespace Orange.Models.DTO
         [Range(1, 100)]
         public int Count { get; set; } = 1;
 
+        [MaxFileSize(1)]
+        [Extensions([".jpg", ".png"])]
         public IFormFile? Image { get; set; }
     }
 }
