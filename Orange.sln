@@ -35,7 +35,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orange.Services.EmailAPI", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orange.Services.OrderAPI", "Orange.Services.OrderAPI\Orange.Services.OrderAPI.csproj", "{4FE8DDEC-AA01-4191-A5AC-AF85A24E10DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orange.Services.RewardAPI", "Orange.Services.RewardAPI\Orange.Services.RewardAPI.csproj", "{4B3B3FC7-5C17-4A2B-AC16-883821CEB227}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orange.Services.RewardAPI", "Orange.Services.RewardAPI\Orange.Services.RewardAPI.csproj", "{4B3B3FC7-5C17-4A2B-AC16-883821CEB227}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orange.GatewaySolution", "Orange.GatewaySolution\Orange.GatewaySolution.csproj", "{27A71004-84F3-413D-B2DC-A72E52405E7B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,6 +89,10 @@ Global
 		{4B3B3FC7-5C17-4A2B-AC16-883821CEB227}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B3B3FC7-5C17-4A2B-AC16-883821CEB227}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B3B3FC7-5C17-4A2B-AC16-883821CEB227}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27A71004-84F3-413D-B2DC-A72E52405E7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27A71004-84F3-413D-B2DC-A72E52405E7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27A71004-84F3-413D-B2DC-A72E52405E7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27A71004-84F3-413D-B2DC-A72E52405E7B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -103,6 +109,7 @@ Global
 		{86E6D850-15EC-4F2A-AD7F-CCA3939DF94C} = {83623753-EC5A-4455-B9A1-3E69D0EE22AB}
 		{4FE8DDEC-AA01-4191-A5AC-AF85A24E10DE} = {83623753-EC5A-4455-B9A1-3E69D0EE22AB}
 		{4B3B3FC7-5C17-4A2B-AC16-883821CEB227} = {83623753-EC5A-4455-B9A1-3E69D0EE22AB}
+		{27A71004-84F3-413D-B2DC-A72E52405E7B} = {6603A6D6-0925-43E4-ABF5-C8D108146C26}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3016451D-B150-4133-8C8C-3A7477AA34FA}
