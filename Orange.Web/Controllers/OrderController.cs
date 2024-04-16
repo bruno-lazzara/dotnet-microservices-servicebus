@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Orange.Models.DTO;
 using Orange.Web.Services.Interfaces;
 using Orange.Web.Utils;
@@ -14,11 +15,13 @@ namespace Orange.Web.Controllers
             _orderService = orderService;
         }
 
+        [Authorize]
         public IActionResult Index()
         {
             return View();
         }
 
+        [Authorize]
         public async Task<IActionResult> Detail(int orderId)
         {
             OrderHeaderDTO? order = await _orderService.GetOrderByIdAsync(orderId);
